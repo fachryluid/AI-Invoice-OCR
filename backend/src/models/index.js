@@ -1,7 +1,7 @@
 /**
  * Export all models from a central file
  */
-const ProcessedInvoice = require('./processedInvoice');
+const ProcessedInvoice = require('./ProcessedInvoice');
 const RawOCRData = require('./RawOCRData');
 const Product = require('./Product');
 const ProductItem = require('./ProductItem');

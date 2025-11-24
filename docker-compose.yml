@@ -34,8 +34,18 @@ services:
 
     volumes:
       - ./backend/uploads:/app/uploads
-    ports:
-      - "1513:1513"
+
+    # IMPORTANT: remove ports, Traefik will handle routing
+    # ports:
+    #   - "1513:1513"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api-invoice-ocr.ai-lab.id`)"
+      - "traefik.http.routers.backend.entryPoints=https"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=1513"
+
     restart: always
 
   frontend:
@@ -48,11 +58,24 @@ services:
         VITE_API_OCR_AUTH_TOKEN: ${VITE_API_OCR_AUTH_TOKEN}
         VITE_API_SAVE_ENDPOINT: ${VITE_API_SAVE_ENDPOINT}
         VITE_USE_MOCK_DATA: ${VITE_USE_MOCK_DATA}
+
     container_name: frontend
+
+    # Vite env only works at build time
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
-    ports:
-      - "5173:80"
+
+    # IMPORTANT: REMOVE PORT MAPPING
+    # ports:
+    #   - "5173:80"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`invoice-ocr.ai-lab.id`)"
+      - "traefik.http.routers.frontend.entryPoints=https"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+
     restart: always
 
 volumes:

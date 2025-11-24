@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    depends_on:
+      - postgres
+    environment:
+      PORT: 1513
+      NODE_ENV: production
+
+      DB_CONNECTION: postgresql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      FRONTEND_URL: ${FRONTEND_URL}
+      SYNC_DB: ${SYNC_DB}
+      UPLOAD_DIR: /app/uploads
+      MAX_FILE_SIZE: ${MAX_FILE_SIZE}
+
+    volumes:
+      - ./backend/uploads:/app/uploads
+    ports:
+      - "1513:1513"
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+      VITE_API_OCR_PROCESS_FILE: ${VITE_API_OCR_PROCESS_FILE}
+      VITE_API_OCR_AUTH_TOKEN: ${VITE_API_OCR_AUTH_TOKEN}
+      VITE_API_SAVE_ENDPOINT: ${VITE_API_SAVE_ENDPOINT}
+      VITE_USE_MOCK_DATA: ${VITE_USE_MOCK_DATA}
+    ports:
+      - "5173:5173"
+    restart: always
+
+volumes:
+  postgres-data:

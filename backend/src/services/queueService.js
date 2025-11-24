@@ -13,7 +13,7 @@ const { ProcessedInvoice, RawOCRData } = require('../models');
 const processingStatus = new Map();
 
 // Get OCR API configuration from environment variables
-const OCR_API_ENDPOINT = process.env.OCR_API_ENDPOINT || 'http://localhost:1880/testingupload';
+const OCR_API_ENDPOINT = process.env.OCR_API_ENDPOINT || 'http://amien-server:5678/webhook/04f85cfb-8f2a-4a22-9e1a-d4bbfa3de5cc';
 const OCR_API_TOKEN = process.env.OCR_API_TOKEN || 'a3f5d6e8b9c0a1b2d3e4f5g6h7i8j9k0l1m2n3o4p5q6r7s8';
 const FALLBACK_OCR_API_ENDPOINT = process.env.FALLBACK_OCR_API_ENDPOINT || 'http://localhost:1880/testingupload';
 const MAX_RETRIES = 2; // Number of retry attempts before falling back

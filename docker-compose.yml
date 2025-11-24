@@ -40,12 +40,11 @@ services:
     #   - "1513:1513"
 
     labels:
-      - "caddy_0.encode=zstd gzip"
-      - "caddy_0.handle_path.0_reverse_proxy={{upstreams 1513}}"
-      - "caddy_0.handle_path=/*"
-      - "caddy_0.header=-Server"
-      - "caddy_0=https://api-invoice-ocr.ai-lab.id"
-      - "caddy_ingress_network=w440o8wkg4ko0w0gcg80g4og"
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`api-invoice-ocr.ai-lab.id`)
+      - traefik.http.routers.backend.entrypoints=websecure
+      - traefik.http.routers.backend.tls.certresolver=letsencrypt
+      - traefik.http.services.backend.loadbalancer.server.port=1513
 
     restart: always
 
@@ -71,13 +70,11 @@ services:
     #   - "5173:80"
 
     labels:
-      - "caddy_0.encode=zstd gzip"
-      - "caddy_0.handle_path.0_reverse_proxy={{upstreams 80}}"
-      - "caddy_0.handle_path=/*"
-      - "caddy_0.header=-Server"
-      - "caddy_0.try_files={path} /index.html /index.php"
-      - "caddy_0=https://invoice-ocr.ai-lab.id"
-      - "caddy_ingress_network=w440o8wkg4ko0w0gcg80g4og"
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`invoice-ocr.ai-lab.id`)
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+      - traefik.http.services.frontend.loadbalancer.server.port=80
 
     restart: always
 
